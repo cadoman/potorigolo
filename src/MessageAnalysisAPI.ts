@@ -33,9 +33,8 @@ class MessageAnalysisAPI {
             emitter.emit('progress', percent);
           }
         },
-      });
-
-      emitter.emit('progress', 37);
+      }).then(() => emitter.emit('done'))
+        .catch((error) => emitter.emit('error', error));
     });
     return emitter;
   }

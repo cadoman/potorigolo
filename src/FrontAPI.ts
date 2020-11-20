@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import IPCHandling from './IPCHandling';
 import RunningTaskEmitter from './models/RunningTaskEmitter';
 
 class FrontAPI {
@@ -6,10 +7,8 @@ class FrontAPI {
 
   public static promptChooseZip(): RunningTaskEmitter {
     const requestID = this.generateID();
-    const res = new RunningTaskEmitter();
     ipcRenderer.send('promptChooseZip', requestID);
-    ipcRenderer.on(`progress:${requestID}`, (_, p) => res.emit('progress', p));
-    return res;
+    return IPCHandling.IPCToEmitter(requestID);
   }
 
   private static generateID() : string {
