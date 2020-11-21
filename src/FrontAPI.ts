@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, nativeImage, NativeImage } from 'electron';
 import fs from 'fs';
 import AnalysisIndex from './AnalysisIndex';
 import IPCHandling from './IPCHandling';
@@ -11,20 +11,35 @@ const userDataPath = window.process.argv.slice(-1)[0];
 
 class FrontAPI {
   public static getSummary(): Promise<ConversationSummary[]> {
+    return FrontAPI.fromFile(AnalysisIndex.summaryFile(userDataPath));
+  }
+
+  public static getMessageRankingEmotion(conversationID: string): Promise<EmotionRanking[]> {
+    return FrontAPI.fromFile(AnalysisIndex.emotionRankingForText(userDataPath, conversationID));
+  }
+
+  public static getPictureMessageRankingEmotion(conversationID: string): Promise<EmotionRanking[]> {
+    return FrontAPI.fromFile(AnalysisIndex.emotionRankingForPicture(userDataPath, conversationID));
+  }
+
+  public static getPicture(pictureID:string, conversationID:string) : Promise<NativeImage> {
+    const photosPath = `${userDataPath}/extraction/messages/inbox/${conversationID}/photos`;
     return new Promise((resolve, reject) => {
-      fs.readFile(AnalysisIndex.summaryFile(userDataPath), 'utf-8', (err, data) => {
+      fs.readdir(photosPath, (err, files) => {
         if (err) {
           reject(err);
-        } else {
-          resolve(JSON.parse(data));
         }
+        const pictureFileName = files.find((f) => f.includes(pictureID));
+        const absoluteName = `${photosPath}/${pictureFileName}`;
+        console.log('picture is ', absoluteName);
+        resolve(nativeImage.createFromPath(absoluteName));
       });
     });
   }
 
-  public static getMessageRankingEmotion(conversationID: string): Promise<EmotionRanking[]> {
+  private static fromFile<T>(filename :string) : Promise<T> {
     return new Promise((resolve, reject) => {
-      fs.readFile(AnalysisIndex.emotionRanking(userDataPath, conversationID), 'utf-8', (err, data) => {
+      fs.readFile(filename, 'utf-8', (err, data) => {
         if (err) {
           reject(err);
         } else {
@@ -38,8 +53,12 @@ class FrontAPI {
     return FrontAPI.createTask(Tasks.promptChooseZip);
   }
 
-  public static analyzeConversationEmotions(convID: string): RunningTaskEmitter {
-    return FrontAPI.createTask(Tasks.rankMessageByEmotions, convID);
+  public static rankTextByEmotion(convID: string): RunningTaskEmitter {
+    return FrontAPI.createTask(Tasks.rankTextMessageByEmotions, convID);
+  }
+
+  public static rankPicturesByEmotion(convID: string): RunningTaskEmitter {
+    return FrontAPI.createTask(Tasks.rankPictureMessageByEmotions, convID);
   }
 
   public static buildSummary(): RunningTaskEmitter {

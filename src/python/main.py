@@ -2,7 +2,7 @@ import json
 import sys, os
 from os.path import join, dirname, abspath
 from summary_analysis import get_conversations_summary
-from analyze_emotion import get_analyzed_emotions
+from analyze_emotion import get_analyzed_emotions_for_picture, get_analyzed_emotions_for_text
 import math
 
 def log_progress(generator, total):
@@ -22,13 +22,16 @@ def execute_operation(ope_name, messages_path, output_path, *args):
     generator=None
     if ope_name=='build_summary':
         generator, size = get_conversations_summary(os.path.join(messages_path, 'inbox'))
-    elif ope_name=='message_emotion_ranking':
+    elif ope_name=='message_emotion_ranking' or ope_name=='picture_emotion_ranking':
         try:
             conv_id = args[0]
         except IndexError:
             print(f'Missing parameter : conversation id', file=sys.stderr)
             sys.exit(1)
-        generator, size = get_analyzed_emotions(join(messages_path, 'inbox', conv_id))
+        if ope_name=='message_emotion_ranking':
+            generator, size = get_analyzed_emotions_for_text(join(messages_path, 'inbox', conv_id))
+        elif ope_name=='picture_emotion_ranking':
+            generator, size = get_analyzed_emotions_for_picture(join(messages_path, 'inbox', conv_id))
     else:
         print(f'Unknown operation : {ope_name}', file=sys.stderr)
         sys.exit(1)

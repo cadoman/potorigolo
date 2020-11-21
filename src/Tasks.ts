@@ -1,6 +1,7 @@
 const Tasks = {
   promptChooseZip: 'promptChooseZip',
   buildSummary: 'buildSummary',
-  rankMessageByEmotions: 'rankMessageByEmotion',
+  rankTextMessageByEmotions: 'rankMessageByEmotion',
+  rankPictureMessageByEmotions: 'rankPictureMessageByEmotion',
 };
 export default Tasks;

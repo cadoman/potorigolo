@@ -16,25 +16,36 @@ const RightPanel = styled.div`
 `;
 
 const ConversationDetails : React.FC<Props> = (props : Props) => {
-  const [messageRankingAnalysis, setMessageRankingAnalysis] = useState<EmotionRanking[]>(undefined);
-
+  const [textMessageRankingAnalysis, setTextMessageRankingAnalysis] = useState<EmotionRanking[]>(undefined);
+  const [pictureMessageRanking, setPictureMessageRanking] = useState<EmotionRanking[]>(undefined);
   const fetchAnalysis = () => {
-    console.log('fetching ', props.conversation.id);
     FrontAPI.getMessageRankingEmotion(props.conversation.id)
       .then((analysis) => {
-        console.log('found analysis', analysis);
-        setMessageRankingAnalysis(analysis);
+        setTextMessageRankingAnalysis(analysis);
       })
-      .catch(() => setMessageRankingAnalysis(undefined));
+      .catch(() => setTextMessageRankingAnalysis(undefined));
+    FrontAPI.getPictureMessageRankingEmotion(props.conversation.id)
+      .then((analysis) => {
+        setPictureMessageRanking(analysis);
+      })
+      .catch(() => setPictureMessageRanking(undefined));
   };
 
   useEffect(fetchAnalysis, [props.conversation]);
 
   const doAnalysis = () => {
-    const task = FrontAPI.analyzeConversationEmotions(props.conversation.id);
-    task.on('done', () => {
-      fetchAnalysis();
-    });
+    let firstTaskDone = false;
+    const fetchIfLast = () => {
+      if (firstTaskDone) {
+        fetchAnalysis();
+      } else {
+        firstTaskDone = true;
+      }
+    };
+    const textTask = FrontAPI.rankTextByEmotion(props.conversation.id);
+    const pictureTask = FrontAPI.rankPicturesByEmotion(props.conversation.id);
+    textTask.on('done', fetchIfLast);
+    pictureTask.on('done', fetchIfLast);
   };
   return (
     <RightPanel>
@@ -51,8 +62,13 @@ const ConversationDetails : React.FC<Props> = (props : Props) => {
         })}
       </h3>
       <p>{props.conversation.last_message.content}</p>
-      {messageRankingAnalysis
-        ? <MessageRankingAnalysis analysis={messageRankingAnalysis} />
+      <h2>Text Message ranking</h2>
+      {textMessageRankingAnalysis
+        ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={textMessageRankingAnalysis} />
+        : <button type="button" onClick={doAnalysis}>Do analysis</button>}
+      <h2>Pictures ranking</h2>
+      {pictureMessageRanking
+        ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={pictureMessageRanking} />
         : <button type="button" onClick={doAnalysis}>Do analysis</button>}
     </RightPanel>
   );

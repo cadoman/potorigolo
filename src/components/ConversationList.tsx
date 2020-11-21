@@ -11,7 +11,7 @@ const StyledOl = styled.ol`
   width : 30%;
   padding: 0;
   max-height: 100vh;
-  overflow-y: scroll
+  overflow-y: scroll;
 `;
 
 const StyledConvButton = styled.button`

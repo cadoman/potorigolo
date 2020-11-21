@@ -26,11 +26,19 @@ class MessageAnalysisAPI {
       ), callerID, event.sender,
     ));
 
-    ipcMain.on(Tasks.rankMessageByEmotions, (event, callerID: string, conversationID: string) => IPCHandling.emitterToIPC(
+    ipcMain.on(Tasks.rankTextMessageByEmotions, (event, callerID: string, conversationID: string) => IPCHandling.emitterToIPC(
       MessageAnalysisAPI.executePython(
         'message_emotion_ranking',
         messagesPath,
-        AnalysisIndex.emotionRanking(app.getPath('userData'), conversationID),
+        AnalysisIndex.emotionRankingForText(app.getPath('userData'), conversationID),
+        conversationID,
+      ), callerID, event.sender,
+    ));
+    ipcMain.on(Tasks.rankPictureMessageByEmotions, (event, callerID: string, conversationID: string) => IPCHandling.emitterToIPC(
+      MessageAnalysisAPI.executePython(
+        'picture_emotion_ranking',
+        messagesPath,
+        AnalysisIndex.emotionRankingForPicture(app.getPath('userData'), conversationID),
         conversationID,
       ), callerID, event.sender,
     ));

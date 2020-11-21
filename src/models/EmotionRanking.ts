@@ -1,9 +1,9 @@
-import Message from './Message';
+import MessageModel from './MessageModel';
 
 interface EmotionRanking{
   reaction : string;
   best_messages : {
-    message : Message,
+    message : MessageModel,
     score : number
   }[]
 }

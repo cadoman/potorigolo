@@ -1,12 +1,12 @@
-import Message from './Message';
+import MessageModel from './MessageModel';
 
 interface ConversationSummary {
   title: string;
   last_update: string;
   message_count: number;
   id: string;
-  last_message: Message;
-  first_message : Message;
+  last_message: MessageModel;
+  first_message : MessageModel;
 
 }
 export default ConversationSummary;

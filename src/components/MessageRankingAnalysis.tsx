@@ -1,43 +1,32 @@
 import React from 'react';
-import Message from '../models/Message';
 import EmotionRanking from '../models/EmotionRanking';
+import MessageDisplay from './MessageDisplay';
 
 interface Props{
-  analysis:EmotionRanking[]
+  analysis:EmotionRanking[];
+  conversationID : string;
 }
 const MessageRankingAnalysis:React.FC<Props> = (props:Props) => {
-  const renderMessage = (message : Message, score : number) => (
-    <li>
-      {message.sender_name}
-      {' '}
-      :
-      {message.content}
-      {' '}
-      (score :
-      {' '}
-      {score}
-      )
-    </li>
-  );
   const renderEmotion = (emotionRanking : EmotionRanking) => (
-    <li>
+    <div key={emotionRanking.reaction}>
       <div>
         {emotionRanking.reaction}
       </div>
-      <ol>
-        {emotionRanking.best_messages.map((e) => renderMessage(e.message, e.score))}
-      </ol>
-    </li>
+      <div>
+        {emotionRanking.best_messages.map((e) => (
+          <MessageDisplay
+            key={e.message.timestamp_ms}
+            message={e.message}
+            conversationID={props.conversationID}
+          />
+        ))}
+      </div>
+    </div>
   );
   return (
-    <p>
-      COUCOU
-      {' '}
-      {props.analysis.map((ana) => ana.reaction)}
-      <ol>
-        {props.analysis.map(renderEmotion)}
-      </ol>
-    </p>
+    <>
+      {props.analysis.map(renderEmotion)}
+    </>
   );
 };
 

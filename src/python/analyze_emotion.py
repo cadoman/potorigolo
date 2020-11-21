@@ -4,11 +4,18 @@ import json
 from fix_messages import fix_message, fix_text
 from collections import Counter
 
-def get_analyzed_emotions(conversation_path):
+def get_analyzed_emotions_for_text(conversation_path):
+    return get_analyzed_emotions(conversation_path, 'content')
+
+def get_analyzed_emotions_for_picture(conversation_path):
+    return get_analyzed_emotions(conversation_path, 'photos')
+
+def get_analyzed_emotions(conversation_path, required_field):
     messages = generate_message_data(conversation_path)
-    messages = [m for m in messages if 'content' in m] # keep only text message
+    messages = [m for m in messages if required_field in m] # keep only text message
     different_reactions = get_different_reactions(messages)    
     return ({'reaction': fix_text(r), 'best_messages' : get_best_reaction_messages(messages, r)} for r in different_reactions), len(different_reactions)
+
 
 def get_best_reaction_messages(messages, reaction):
     scores = [[m, get_message_score(m, reaction)] for m in messages]    
