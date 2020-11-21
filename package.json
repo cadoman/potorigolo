@@ -5,7 +5,7 @@
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "APP_DEV=true electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -72,6 +72,7 @@
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
+    "copy-webpack-plugin": "^6.3.2",
     "css-loader": "^4.2.1",
     "electron": "11.0.1",
     "eslint": "^7.13.0",
@@ -88,9 +89,11 @@
   "dependencies": {
     "@types/react": "^16.9.56",
     "@types/react-dom": "^16.9.9",
+    "@types/styled-components": "^5.1.4",
     "electron-squirrel-startup": "^1.0.0",
     "extract-zip": "^2.0.1",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "styled-components": "^5.2.1"
   }
 }

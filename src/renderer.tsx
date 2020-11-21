@@ -27,20 +27,44 @@
  */
 
 import './index.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDom from 'react-dom';
 import ExtractZip from './components/ExtractZip';
+import ConversationSummary from './models/ConversationSummary';
+import FrontAPI from './FrontAPI';
+import AllConversations from './components/AllConversations';
 
 const mainElement = document.createElement('div');
 document.body.appendChild(mainElement);
 const App = () => {
-  return (
-    <h1>
-      Hi from a react app
-      <ExtractZip />
-    </h1>
-  )
-}
-ReactDom.render(<App />, mainElement);
+  const [conversationSummaries, setConversationSummaries] = useState<ConversationSummary[]>([]);
+  const getSummary = () => {
+    FrontAPI.getSummary()
+      .then((summaries) => {
+        summaries.sort((a, b) => new Date(b.last_update).getTime() - new Date(a.last_update).getTime());
+        setConversationSummaries(summaries);
+      })
+      .catch(() => {});
+  };
 
-console.log('👋 This message is being logged by "renderer.js", included via webpack');
+  useEffect(getSummary, []);
+  return (
+    <>
+      <header>
+        <h1>
+          Poto Rigolo
+
+        </h1>
+      </header>
+      <section>
+        {
+          conversationSummaries.length
+            ? <AllConversations summaries={conversationSummaries} />
+            : <ExtractZip onSummaryGenerated={getSummary} />
+        }
+
+      </section>
+    </>
+  );
+};
+ReactDom.render(<App />, mainElement);

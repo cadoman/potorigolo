@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import MessageAnalysisAPI from './MessageAnalysisAPI';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -11,15 +11,19 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: 600,
-    width: 800,
+    height: 800,
+    width: 1200,
     webPreferences: {
       nodeIntegration: true,
+      additionalArguments: [app.getPath('userData')],
     },
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  // ipcMain.on('userDataPath', (event) => {
+  //   event.sender.send('userDataPath', app.getPath('userData'));
+  // });
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
