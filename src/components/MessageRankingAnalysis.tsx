@@ -1,31 +1,46 @@
 import React from 'react';
-import EmotionRanking from '../models/EmotionRanking';
+import styled from 'styled-components';
+import RankedMessage from '../models/RankedMessage';
 import MessageDisplay from './MessageDisplay';
 
-interface Props{
-  analysis:EmotionRanking[];
-  conversationID : string;
+interface Props {
+  analysis: RankedMessage[];
+  conversationID: string;
 }
-const MessageRankingAnalysis:React.FC<Props> = (props:Props) => {
-  const renderEmotion = (emotionRanking : EmotionRanking) => (
-    <div key={emotionRanking.reaction}>
-      <div>
-        {emotionRanking.reaction}
-      </div>
-      <div>
-        {emotionRanking.best_messages.map((e) => (
-          <MessageDisplay
-            key={e.message.timestamp_ms}
-            message={e.message}
-            conversationID={props.conversationID}
-          />
-        ))}
-      </div>
-    </div>
-  );
+
+const MessagesContainer = styled.div`
+  border-top: 2px dashed black;
+  margin-top: 100px;
+`;
+
+const TimeIndication = styled.p`
+  color : gray;
+  text-align: center;
+`;
+const MessageRankingAnalysis: React.FC<Props> = (props: Props) => {
+  const renderContext = (ranked: RankedMessage) => ranked.context.map((message, index) => (
+    <MessageDisplay
+      key={message.timestamp_ms}
+      message={message}
+      conversationID={props.conversationID}
+      stickWithPrevious={index > 0 && ranked.context[index - 1].sender_name === message.sender_name}
+    />
+  ));
+
   return (
     <>
-      {props.analysis.map(renderEmotion)}
+      {
+          props.analysis.map((rankedMessage) => (
+            <MessagesContainer key={rankedMessage.message.timestamp_ms}>
+              <TimeIndication>
+                {new Date(rankedMessage.message.timestamp_ms).toLocaleDateString('fr')}
+              </TimeIndication>
+              <>
+                {renderContext(rankedMessage)}
+              </>
+            </MessagesContainer>
+          ))
+      }
     </>
   );
 };

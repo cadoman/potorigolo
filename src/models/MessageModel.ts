@@ -5,6 +5,10 @@ interface MessageModel{
   content?: string
   photos?: {
     uri : string
+  }[],
+  reactions?: {
+    reaction : string,
+    actor : string
   }[]
 }
 

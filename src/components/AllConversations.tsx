@@ -10,6 +10,8 @@ interface Props{
 const RightP = styled.p`
   display: inline-block;
   width: 70%;
+  height: 100vh;
+  overflow-y: scroll;
 `;
 const MainPanel = styled.div`
   display: flex;

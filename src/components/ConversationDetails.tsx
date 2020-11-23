@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import EmotionRanking from '../models/EmotionRanking';
 import FrontAPI from '../FrontAPI';
 import ConversationSummary from '../models/ConversationSummary';
 import MessageRankingAnalysis from './MessageRankingAnalysis';
+import RankedMessage from '../models/RankedMessage';
 
-interface Props{
-  conversation : ConversationSummary
+interface Props {
+  conversation: ConversationSummary
 }
 
 const RightPanel = styled.div`
   width: 70%;
   margin: 0;
   display: inline-block;
+  height: 100vh;
+  overflow-y: scroll;
+`;
+const MessageList = styled.div`
+
 `;
 
-const ConversationDetails : React.FC<Props> = (props : Props) => {
-  const [textMessageRankingAnalysis, setTextMessageRankingAnalysis] = useState<EmotionRanking[]>(undefined);
-  const [pictureMessageRanking, setPictureMessageRanking] = useState<EmotionRanking[]>(undefined);
+const ConversationDetails: React.FC<Props> = (props: Props) => {
+  const [textMessageRankingAnalysis, setTextMessageRankingAnalysis] = useState<RankedMessage[]>(undefined);
+  const [pictureMessageRanking, setPictureMessageRanking] = useState<RankedMessage[]>(undefined);
   const fetchAnalysis = () => {
     FrontAPI.getMessageRankingEmotion(props.conversation.id)
       .then((analysis) => {
@@ -50,7 +55,7 @@ const ConversationDetails : React.FC<Props> = (props : Props) => {
   return (
     <RightPanel>
       <h2>
-        { props.conversation.title}
+        {props.conversation.title}
       </h2>
       <h3>
         {props.conversation.message_count}
@@ -63,13 +68,17 @@ const ConversationDetails : React.FC<Props> = (props : Props) => {
       </h3>
       <p>{props.conversation.last_message.content}</p>
       <h2>Text Message ranking</h2>
-      {textMessageRankingAnalysis
-        ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={textMessageRankingAnalysis} />
-        : <button type="button" onClick={doAnalysis}>Do analysis</button>}
+      <MessageList>
+        {textMessageRankingAnalysis
+          ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={textMessageRankingAnalysis} />
+          : <button type="button" onClick={doAnalysis}>Do analysis</button>}
+      </MessageList>
       <h2>Pictures ranking</h2>
-      {pictureMessageRanking
-        ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={pictureMessageRanking} />
-        : <button type="button" onClick={doAnalysis}>Do analysis</button>}
+      <MessageList>
+        {pictureMessageRanking
+          ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={pictureMessageRanking} />
+          : <button type="button" onClick={doAnalysis}>Do analysis</button>}
+      </MessageList>
     </RightPanel>
   );
 };

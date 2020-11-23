@@ -9,5 +9,7 @@ def fix_object(obj):
         return fix_text(obj)
     elif isinstance(obj, list):
         return [fix_object(element) for element in obj]
+    elif isinstance(obj, set):
+        return set(fix_object(o) for o in obj)
     else:
         return obj

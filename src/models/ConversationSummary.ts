@@ -7,6 +7,8 @@ interface ConversationSummary {
   id: string;
   last_message: MessageModel;
   first_message : MessageModel;
-
+  participants : {
+    name : string
+  }[];
 }
 export default ConversationSummary;

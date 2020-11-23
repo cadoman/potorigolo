@@ -50,12 +50,6 @@ const App = () => {
   useEffect(getSummary, []);
   return (
     <>
-      <header>
-        <h1>
-          Poto Rigolo
-
-        </h1>
-      </header>
       <section>
         {
           conversationSummaries.length

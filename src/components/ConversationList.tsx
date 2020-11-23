@@ -12,6 +12,7 @@ const StyledOl = styled.ol`
   padding: 0;
   max-height: 100vh;
   overflow-y: scroll;
+  margin: 0;
 `;
 
 const StyledConvButton = styled.button`
@@ -38,9 +39,22 @@ const ConversationList: React.FC<Props> = (props : Props) => {
     </StyledConvButton>
   );
 
+  const conversationMatters = (summary : ConversationSummary) : boolean => summary.participants.length > 2 && summary.message_count > 200;
+  const guessAuthor = (summary : ConversationSummary[]) => {
+    const part = summary.map((conv) => conv.participants.map((p) => p.name));
+    let potentialAuthors = part[0];
+    let i = 1;
+    while (potentialAuthors.length > 1) {
+      const nextAuthors = part[i];
+      potentialAuthors = potentialAuthors.filter((author) => nextAuthors.indexOf(author) !== -1);
+      i += 1;
+    }
+    return potentialAuthors[0];
+  };
+  localStorage.setItem('author', guessAuthor(props.conversationSummaries));
   return (
     <StyledOl>
-      {props.conversationSummaries.map(renderSummary)}
+      {props.conversationSummaries.filter(conversationMatters).map(renderSummary)}
     </StyledOl>
   );
 };

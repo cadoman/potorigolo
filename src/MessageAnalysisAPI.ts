@@ -80,14 +80,13 @@ class MessageAnalysisAPI {
     if (process.env.APP_DEV?.trim() === 'true') {
       try {
         ls = spawn('python3', [pyMainPath, opName, messagePath, outputPath, ...args]);
-        console.log(`python command : python3 ${pyMainPath} ${opName} ${messagesPath} ${outputPath}`);
+        console.log(`python command : python3 ${pyMainPath} ${opName} ${messagesPath} ${outputPath} ${args.join(' ')}`);
       } catch (error) {
         console.error('caught the error', error);
       }
     }
     try {
       fs.watch(path.dirname(progressFile), () => {
-        console.log('watch emitted');
         fs.readFile(progressFile, { encoding: 'utf-8' }, (err, content) => {
           res.emit('progress', +content);
         });

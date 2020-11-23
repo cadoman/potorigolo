@@ -5,7 +5,7 @@ import IPCHandling from './IPCHandling';
 import RunningTaskEmitter from './models/RunningTaskEmitter';
 import ConversationSummary from './models/ConversationSummary';
 import Tasks from './Tasks';
-import EmotionRanking from './models/EmotionRanking';
+import RankedMessage from './models/RankedMessage';
 
 const userDataPath = window.process.argv.slice(-1)[0];
 
@@ -14,11 +14,11 @@ class FrontAPI {
     return FrontAPI.fromFile(AnalysisIndex.summaryFile(userDataPath));
   }
 
-  public static getMessageRankingEmotion(conversationID: string): Promise<EmotionRanking[]> {
+  public static getMessageRankingEmotion(conversationID: string): Promise<RankedMessage[]> {
     return FrontAPI.fromFile(AnalysisIndex.emotionRankingForText(userDataPath, conversationID));
   }
 
-  public static getPictureMessageRankingEmotion(conversationID: string): Promise<EmotionRanking[]> {
+  public static getPictureMessageRankingEmotion(conversationID: string): Promise<RankedMessage[]> {
     return FrontAPI.fromFile(AnalysisIndex.emotionRankingForPicture(userDataPath, conversationID));
   }
 

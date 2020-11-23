@@ -1,7 +1,7 @@
 import os
 from os.path import join
 import json
-from fix_messages import fix_message, fix_text
+from fix_messages import fix_message, fix_text, fix_object
 from collections import Counter
 
 def get_analyzed_emotions_for_text(conversation_path):
@@ -12,24 +12,31 @@ def get_analyzed_emotions_for_picture(conversation_path):
 
 def get_analyzed_emotions(conversation_path, required_field):
     messages = generate_message_data(conversation_path)
-    messages = [m for m in messages if required_field in m] # keep only text message
-    different_reactions = get_different_reactions(messages)    
-    return ({'reaction': fix_text(r), 'best_messages' : get_best_reaction_messages(messages, r)} for r in different_reactions), len(different_reactions)
-
-
-def get_best_reaction_messages(messages, reaction):
-    scores = [[m, get_message_score(m, reaction)] for m in messages]    
+    messages_filtered = [m for m in messages if required_field in m] # keep only text message
+    different_reactions = fix_object(get_different_reactions(messages_filtered))
+    forbidden_reactions = ['👎', '👍']
+    different_reactions = [r for r in different_reactions if r not in forbidden_reactions]
+    scores = [[m, get_message_score(m, different_reactions)] for m in messages_filtered]
     best = sorted(scores, key=lambda x : -x[1])[:10]
     best = [(message, score) for (message, score) in best if score > 0]
-    return [{
+    return ({
         'message' : fix_message(message),
+        'context' : fix_object(get_context(message, messages)),
         'score' : score
-    } for message, score in best]
+    } for message, score in best), len(best)
+
+def get_context(message, messages):
+    message_index = next(index for index, m in enumerate(messages) if m['timestamp_ms']==message['timestamp_ms'] )
+    # reverse the array so messages are display chronologically
+    neighboring_messages = messages[message_index+10:message_index-10:-1]
+    one_hour = 3.6e6
+    same_moment_messages = [m for m in neighboring_messages if abs(m['timestamp_ms'] - message['timestamp_ms']) < 2 * one_hour]
+    return same_moment_messages
 
 
-def get_message_score(message, reaction):
+def get_message_score(message, reactions):
     try:
-        return len([r for r in message['reactions'] if r['reaction'] == reaction])
+        return len([r for r in message['reactions'] if fix_text(r['reaction']) in reactions])
     except KeyError:
         return 0
 

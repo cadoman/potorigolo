@@ -17,7 +17,8 @@ def get_conversation_summary(conv_path):
         conversation_summary = {
             "title" : fix_text(message_data['title']),
             "last_update" : datetime.utcfromtimestamp(message_data['messages'][0]['timestamp_ms']/1000).isoformat(),
-            "id" : message_data['thread_path'].split('/')[1]
+            "id" : message_data['thread_path'].split('/')[1],
+            'participants' : message_data['participants']
         }
     for message_file in message_files:
         if message_file != 'message_1.json':
