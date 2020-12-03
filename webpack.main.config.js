@@ -1,4 +1,6 @@
 const CopyPlugin = require("copy-webpack-plugin");
+const PermissionsOutputPlugin = require('webpack-permissions-plugin');
+const path = require('path')
 
 module.exports = {
   /**
@@ -19,6 +21,11 @@ module.exports = {
         { from: "src/python", to: "python" },
       ],
     }),
+    new PermissionsOutputPlugin({
+      buildFiles : [{
+        path :path.resolve(__dirname, '.webpack/main/python/main'),
+        fileMode : '777'
+      }]
+    })
   ],
-
 };

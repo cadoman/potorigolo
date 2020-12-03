@@ -72,6 +72,7 @@ class MessageAnalysisAPI {
 
   private static executePython(opName: string, messagePath: string, outputPath: string, ...args: string[]): RunningTaskEmitter {
     const pyMainPath = `${__dirname}/python/main.py`;
+    const pyExePath = `${__dirname}/python/main`;
     const progressFile = `${__dirname}/python/progress.txt`;
 
     const res = new RunningTaskEmitter();
@@ -84,6 +85,9 @@ class MessageAnalysisAPI {
       } catch (error) {
         console.error('caught the error', error);
       }
+    } else {
+      console.log(`command : ${pyExePath} ${[opName, messagePath, outputPath, ...args].join(' ')}`);
+      ls = spawn(pyExePath, [opName, messagePath, outputPath, ...args]);
     }
     try {
       fs.watch(path.dirname(progressFile), () => {

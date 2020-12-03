@@ -11,7 +11,7 @@ def get_analyzed_emotions_for_picture(conversation_path):
     return get_analyzed_emotions(conversation_path, 'photos')
 
 def get_analyzed_emotions(conversation_path, required_field):
-    messages = generate_message_data(conversation_path)
+    messages = load_message_data(conversation_path)
     messages_filtered = [m for m in messages if required_field in m] # keep only text message
     different_reactions = fix_object(get_different_reactions(messages_filtered))
     forbidden_reactions = ['👎', '👍']
@@ -45,7 +45,7 @@ def get_different_reactions(messages):
     reactions = [reac['reaction']  for message in with_reactions for reac in message['reactions']]
     return set(reactions)
 
-def generate_message_data(conversation_path):
+def load_message_data(conversation_path):
     message_files = sorted(
         [fname for fname in os.listdir(
             conversation_path) if 'message' in fname],

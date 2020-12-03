@@ -4,6 +4,8 @@ from os.path import join, dirname, abspath
 from summary_analysis import get_conversations_summary
 from analyze_emotion import get_analyzed_emotions_for_picture, get_analyzed_emotions_for_text
 import math
+from curse_detection import score_curse
+from grammar_check import check_errors
 
 def log_progress(generator, total):
     percent=-1
@@ -22,16 +24,21 @@ def execute_operation(ope_name, messages_path, output_path, *args):
     generator=None
     if ope_name=='build_summary':
         generator, size = get_conversations_summary(os.path.join(messages_path, 'inbox'))
-    elif ope_name=='message_emotion_ranking' or ope_name=='picture_emotion_ranking':
+    elif ope_name=='message_emotion_ranking' or ope_name=='picture_emotion_ranking' or ope_name=='curse_detection' or ope_name=='spell_check':
         try:
             conv_id = args[0]
         except IndexError:
             print(f'Missing parameter : conversation id', file=sys.stderr)
             sys.exit(1)
+        conversation_path = join(messages_path, 'inbox', conv_id)
         if ope_name=='message_emotion_ranking':
-            generator, size = get_analyzed_emotions_for_text(join(messages_path, 'inbox', conv_id))
+            generator, size = get_analyzed_emotions_for_text(conversation_path)
         elif ope_name=='picture_emotion_ranking':
-            generator, size = get_analyzed_emotions_for_picture(join(messages_path, 'inbox', conv_id))
+            generator, size = get_analyzed_emotions_for_picture(conversation_path)
+        elif ope_name=='curse_detection':
+            score_curse(conversation_path)
+        elif ope_name=='spell_check':
+            check_errors(conversation_path)
     else:
         print(f'Unknown operation : {ope_name}', file=sys.stderr)
         sys.exit(1)

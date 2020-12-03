@@ -14,13 +14,13 @@ const ExtractZip: React.FC<Props> = (props : Props) => {
     task.on('done', props.onSummaryGenerated);
   };
   const extractZip = () => {
-    // const task = FrontAPI.promptChooseZip();
-    // task.on('progress', (p) => setProgress(p));
-    // task.on('done', () => {
-    //   setDone(true);
-    startSummaryAnalysis();
-    // });
-    // task.on('error', (error) => { setExtractionError(error); console.error(error); });
+    const task = FrontAPI.promptChooseZip();
+    task.on('progress', (p) => setProgress(p));
+    task.on('done', () => {
+      setDone(true);
+      startSummaryAnalysis();
+    });
+    task.on('error', (error) => { setExtractionError(error); console.error(error); });
   };
 
   return (

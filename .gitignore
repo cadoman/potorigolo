@@ -92,3 +92,10 @@ out/
 # Python
 **__pycache__**
 src/python/progress.txt
+
+**build**
+**dist**
+**main.spec
+
+
+.vscode
