@@ -74,14 +74,15 @@ class MessageAnalysisAPI {
     const pyMainPath = `${__dirname}/python/main.py`;
     const pyExePath = `${__dirname}/python/main`;
     const progressFile = `${__dirname}/python/progress.txt`;
+    const pythonCommand = process.platform==='win32'?'py':'python3';
 
     const res = new RunningTaskEmitter();
     let ls;
 
     if (process.env.APP_DEV?.trim() === 'true') {
       try {
-        ls = spawn('python3', [pyMainPath, opName, messagePath, outputPath, ...args]);
-        console.log(`python command : python3 ${pyMainPath} ${opName} ${messagesPath} ${outputPath} ${args.join(' ')}`);
+        ls = spawn(pythonCommand, [pyMainPath, opName, messagePath, outputPath, ...args]);
+        console.log(`python command : ${pythonCommand} ${pyMainPath} ${opName} ${messagesPath} ${outputPath} ${args.join(' ')}`);
       } catch (error) {
         console.error('caught the error', error);
       }

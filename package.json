@@ -5,9 +5,10 @@
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
-    "start": "APP_DEV=true electron-forge start",
+    "start": "set APP_DEV=true && electron-forge start",
     "package": "electron-forge package",
     "make": "pyinstaller --onefile src/python/main.py && cp dist/main src/python && electron-forge make",
+    "make:windows": "pyinstaller --onefile src/python/main.py & copy dist/main.exe src/python/main.exe & electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts ."
   },

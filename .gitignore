@@ -92,6 +92,8 @@ out/
 # Python
 **__pycache__**
 src/python/progress.txt
+src/python/main
+src/python/main.exe
 
 **build**
 **dist**
