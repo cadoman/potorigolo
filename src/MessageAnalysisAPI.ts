@@ -66,6 +66,7 @@ class MessageAnalysisAPI {
         },
       }).then(() => emitter.emit('done'))
         .catch((error) => emitter.emit('error', error));
+      emitter.emit('start');
     });
     return emitter;
   }
@@ -74,7 +75,7 @@ class MessageAnalysisAPI {
     const pyMainPath = `${__dirname}/python/main.py`;
     const pyExePath = `${__dirname}/python/main`;
     const progressFile = `${__dirname}/python/progress.txt`;
-    const pythonCommand = process.platform==='win32'?'py':'python3';
+    const pythonCommand = process.platform === 'win32' ? 'py' : 'python3';
 
     const res = new RunningTaskEmitter();
     let ls;
@@ -90,6 +91,7 @@ class MessageAnalysisAPI {
       console.log(`command : ${pyExePath} ${[opName, messagePath, outputPath, ...args].join(' ')}`);
       ls = spawn(pyExePath, [opName, messagePath, outputPath, ...args]);
     }
+    res.emit('start');
     try {
       fs.watch(path.dirname(progressFile), () => {
         fs.readFile(progressFile, { encoding: 'utf-8' }, (err, content) => {

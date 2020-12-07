@@ -1,6 +1,9 @@
 import { EventEmitter } from 'events';
 
 declare interface RunningTaskEmitter {
+  on(event: 'start', listener: () => void): this
+  emit(event: 'start'): boolean
+
   on(event: 'progress', listener: (progress: number) => void): this
   emit(event: 'progress', progress: number): boolean
 

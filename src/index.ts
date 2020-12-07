@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import MessageAnalysisAPI from './MessageAnalysisAPI';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -26,7 +26,8 @@ const createWindow = (): void => {
   // });
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
+  mainWindow.maximize();
   MessageAnalysisAPI.initializeListeners();
 };
 
