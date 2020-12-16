@@ -57,15 +57,8 @@ interface Props {
   stickWithPrevious?: boolean;
 }
 const MessageDisplay: React.FC<Props> = (props: Props) => {
-  const [picture, setPicture] = useState<string>(undefined);
   const authorIsMe = localStorage.getItem('author') === props.message.sender_name;
-  useEffect(() => {
-    if (props.message.photos) {
-      FrontAPI.getPicture(getPictureID(props.message.photos[0].uri), props.conversationID).then(
-        (p) => setPicture(p),
-      );
-    }
-  }, [props.message, props.conversationID]);
+  const pictureID = props.message.photos ? getPictureID(props.message.photos[0].uri) : '';
   return (
     <MessageRow authorIsMe={authorIsMe}>
 
@@ -79,10 +72,10 @@ const MessageDisplay: React.FC<Props> = (props: Props) => {
           )
         }
         {
-          picture
+          pictureID
           && (
             <StyledImage
-              src="http://localhost:1616/12345678/54321"
+              src={`http://localhost:1616/${props.conversationID}/${pictureID}`}
               alt=""
             />
           )

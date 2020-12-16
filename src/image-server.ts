@@ -10,12 +10,12 @@ class ImageServer {
       const picturePath = `${this.inboxPath}/extraction/messages/inbox/${req.params.conversationID}/photos`;
       fs.readdir(picturePath, (err, files) => {
         if (err) {
-          res.end(404);
+          res.sendStatus(404);
           return;
         }
         const pictureFileName = files.find((f) => f.includes(req.params.imageID));
         if (!pictureFileName) {
-          res.end(404);
+          res.sendStatus(404);
           return;
         }
 
