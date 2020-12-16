@@ -67,16 +67,16 @@ const ConversationDetails: React.FC<Props> = (props: Props) => {
         })}
       </h3>
       <p>{props.conversation.last_message.content}</p>
-      <h2>Text Message ranking</h2>
-      <MessageList>
-        {textMessageRankingAnalysis
-          ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={textMessageRankingAnalysis} />
-          : <button type="button" onClick={doAnalysis}>Do analysis</button>}
-      </MessageList>
       <h2>Pictures ranking</h2>
       <MessageList>
         {pictureMessageRanking
           ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={pictureMessageRanking} />
+          : <button type="button" onClick={doAnalysis}>Do analysis</button>}
+      </MessageList>
+      <h2>Text Message ranking</h2>
+      <MessageList>
+        {textMessageRankingAnalysis
+          ? <MessageRankingAnalysis conversationID={props.conversation.id} analysis={textMessageRankingAnalysis} />
           : <button type="button" onClick={doAnalysis}>Do analysis</button>}
       </MessageList>
     </RightPanel>

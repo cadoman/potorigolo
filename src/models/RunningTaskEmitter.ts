@@ -10,6 +10,9 @@ declare interface RunningTaskEmitter {
   on(event: 'done', listener: () => void): this
   emit(event: 'done'): boolean
 
+  on(event: 'canceled', listener: () => void): this
+  emit(event: 'canceled'): boolean
+
   on(event: 'error', listener: (error: any) => void): this
   emit(event: 'error', error: any): boolean
 

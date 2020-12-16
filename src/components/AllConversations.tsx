@@ -28,7 +28,7 @@ const AllConversations : React.FC<Props> = (props : Props) => {
       {
         currentConversation
           ? <ConversationDetails conversation={currentConversation} />
-          : <RightP>Vos best conv</RightP>
+          : <RightP>Choisis une conversation à analyser.</RightP>
       }
     </MainPanel>
   );

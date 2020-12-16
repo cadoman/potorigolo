@@ -1,6 +1,21 @@
+import { Button } from '@material-ui/core';
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import FrontAPI from '../FrontAPI';
+import MyLinearProgress from './MyLinearProgress';
 import TutorialExtract from './TutorialExtract';
+
+const FullScreenCenterContent = styled.div`
+  width: 100vw;
+  height : 100vh;
+  display: flex;
+  flex-direction : column;
+  justify-content : center;
+  align-items : center;
+  > *{
+    margin : 5px 10%;
+  }
+`;
 
 interface Props {
   onSummaryGenerated: () => void
@@ -10,7 +25,7 @@ const ExtractZip: React.FC<Props> = (props: Props) => {
   const [extracting, setExtracting] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [extractionError, setExtractionError] = useState(null);
-  const [showTutorial, setShowTutorial] = useState(true);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const startSummaryAnalysis = () => {
     const task = FrontAPI.buildSummary();
@@ -19,11 +34,11 @@ const ExtractZip: React.FC<Props> = (props: Props) => {
   };
   const extractZip = () => {
     const task = FrontAPI.promptChooseZip();
-    task.on('start', () => {
+    task.on('progress', (p) => {
       setExtracting(true);
       setShowTutorial(false);
+      setProgress(p);
     });
-    task.on('progress', (p) => setProgress(p));
     task.on('done', () => {
       setExtracting(false);
       startSummaryAnalysis();
@@ -32,40 +47,48 @@ const ExtractZip: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div>
-      {
-        !extracting && !analyzing && !extractionError && (
-          <>
-            {!showTutorial ? (
-              <>
-                <button type="button" onClick={extractZip}>
-                  Importer l&apos;archive facebook
-                </button>
-                <button type="button" onClick={() => setShowTutorial(true)}>Tu n&apos;as pas ton archive facebook?</button>
-              </>
-            ) : (
-              <TutorialExtract onSelectZip={extractZip} />
-            )}
-          </>
-        )
-      }
+    <>
+      { !extracting && !analyzing && !extractionError && (
+        <>
+          {!showTutorial ? (
+            <FullScreenCenterContent>
+              <Button color="primary" variant="contained" onClick={extractZip}>
+                Importer l&apos;archive facebook
+              </Button>
+              <Button color="primary" size="small" onClick={() => setShowTutorial(true)}>Tu n&apos;as pas ton archive facebook?</Button>
+            </FullScreenCenterContent>
+          ) : (
+            <TutorialExtract onSelectZip={extractZip} />
+          )}
+        </>
+      )}
 
       {
-        extracting
+        (extracting || analyzing)
         && (
-          <div style={{ width: '200px', height: '20px', border: '1px solid black' }}>
-            <div style={{ width: `${progress * 2}px`, height: '20px', backgroundColor: 'orange' }} />
-          </div>
+          <FullScreenCenterContent>
+            <MyLinearProgress style={{ width: 400 }} progress={progress} />
+            {
+                extracting
+                  ? (
+                    <p>
+                      Extraction des messages
+                    </p>
+                  ) : (
+                    <p>Analyse des conversations en cours ...</p>
+                  )
+            }
+          </FullScreenCenterContent>
         )
       }
       {
-        analyzing
-        && <p>Extraction terminée, analyse des conversations en cours ...</p>
+        extractionError && (
+          <FullScreenCenterContent>
+            <p> Erreur lors de l&apos;extraction</p>
+          </FullScreenCenterContent>
+        )
       }
-      {
-        extractionError && <p> Erreur lors de l&apos;extraction</p>
-      }
-    </div>
+    </>
   );
 };
 

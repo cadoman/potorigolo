@@ -51,6 +51,10 @@ class MessageAnalysisAPI {
       filters: [{ name: 'Archives', extensions: ['zip'] }],
       properties: ['openFile'],
     }).then((chosenFile) => {
+      if (chosenFile.canceled) {
+        emitter.emit('canceled');
+        return;
+      }
       const outPutPath = `${app.getPath('userData')}/extraction`;
       let compressedSize = 0;
       let percent = -1;

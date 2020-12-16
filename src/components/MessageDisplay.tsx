@@ -1,4 +1,4 @@
-import { NativeImage } from 'electron';
+// import { NativeImage } from 'electron';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FrontAPI from '../FrontAPI';
@@ -57,7 +57,7 @@ interface Props {
   stickWithPrevious?: boolean;
 }
 const MessageDisplay: React.FC<Props> = (props: Props) => {
-  const [picture, setPicture] = useState<NativeImage>(undefined);
+  const [picture, setPicture] = useState<string>(undefined);
   const authorIsMe = localStorage.getItem('author') === props.message.sender_name;
   useEffect(() => {
     if (props.message.photos) {
@@ -82,7 +82,7 @@ const MessageDisplay: React.FC<Props> = (props: Props) => {
           picture
           && (
             <StyledImage
-              src={picture.toDataURL()}
+              src="http://localhost:1616/12345678/54321"
               alt=""
             />
           )

@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core';
 import React from 'react';
 import styled from 'styled-components';
 import LinkButton from './LinkButton';
@@ -10,22 +11,14 @@ interface Props {
 const Container = styled.div`
   width: 70%;
   margin:  auto;
-  img{
-    max-width: 100%;
-  }
-  p:first-child{
-    margin-top: 15vh;
-  }
 `;
 const TutorialExtract: React.FC<Props> = (props: Props) => (
   <Container>
     <ScrollableSteps>
       <Step title="Aller sur Facebook">
         <p>
-          Va sur
-          {' '}
-          <LinkButton to="https://www.facebook.com/dyi/?referrer=ayi">Facebook</LinkButton>
-          {' '}
+          Suis
+          <LinkButton to="https://www.facebook.com/dyi/?referrer=ayi">ce lien</LinkButton>
           pour télécharger tes données
         </p>
         <img src="images/dl_archive_landing_page.png" alt="Téléchargement des informations Facebook" />
@@ -51,7 +44,7 @@ const TutorialExtract: React.FC<Props> = (props: Props) => (
       </Step>
       <Step title="Importer l'archive">
         <p>Importe le fichier .zip</p>
-        <button type="button" onClick={props.onSelectZip}>Importer le .zip</button>
+        <Button color="primary" variant="contained" onClick={props.onSelectZip}>Importer le .zip</Button>
       </Step>
     </ScrollableSteps>
   </Container>

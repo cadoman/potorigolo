@@ -22,7 +22,7 @@ class FrontAPI {
     return FrontAPI.fromFile(AnalysisIndex.emotionRankingForPicture(userDataPath, conversationID));
   }
 
-  public static getPicture(pictureID:string, conversationID:string) : Promise<NativeImage> {
+  public static getPicture(pictureID:string, conversationID:string) : Promise<string> {
     const photosPath = `${userDataPath}/extraction/messages/inbox/${conversationID}/photos`;
     return new Promise((resolve, reject) => {
       fs.readdir(photosPath, (err, files) => {
@@ -32,7 +32,7 @@ class FrontAPI {
         const pictureFileName = files.find((f) => f.includes(pictureID));
         const absoluteName = `${photosPath}/${pictureFileName}`;
         console.log('picture is ', absoluteName);
-        resolve(nativeImage.createFromPath(absoluteName));
+        resolve(absoluteName);
       });
     });
   }
