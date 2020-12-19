@@ -1,7 +1,6 @@
 // import { NativeImage } from 'electron';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import FrontAPI from '../FrontAPI';
 import MessageModel from '../models/MessageModel';
 
 const getPictureID = (uri: string): string => {
@@ -56,18 +55,21 @@ interface Props {
   conversationID: string;
   stickWithPrevious?: boolean;
 }
-const MessageDisplay: React.FC<Props> = (props: Props) => {
-  const authorIsMe = localStorage.getItem('author') === props.message.sender_name;
-  const pictureID = props.message.photos ? getPictureID(props.message.photos[0].uri) : '';
+const MessageDisplay: React.FC<Props> = ({ message, conversationID, stickWithPrevious }: Props) => {
+  const authorIsMe = localStorage.getItem('author') === message.sender_name;
+  const pictureID = message.photos ? getPictureID(message.photos[0].uri) : '';
+  if (!message.content && !message.photos) {
+    console.log('empty message : ', message);
+  }
   return (
     <MessageRow authorIsMe={authorIsMe}>
 
-      <MessageContainer stuckWithPrevious={props.stickWithPrevious}>
+      <MessageContainer stuckWithPrevious={stickWithPrevious}>
         {
-          !props.stickWithPrevious && !authorIsMe
+          !stickWithPrevious && !authorIsMe
           && (
             <AuthorName>
-              {props.message.sender_name}
+              {message.sender_name}
             </AuthorName>
           )
         }
@@ -75,24 +77,24 @@ const MessageDisplay: React.FC<Props> = (props: Props) => {
           pictureID
           && (
             <StyledImage
-              src={`http://localhost:1616/${props.conversationID}/${pictureID}`}
+              src={`http://localhost:1616/${conversationID}/${pictureID}`}
               alt=""
             />
           )
         }
         {
-          !!props.message.content
+          !!message.content
           && (
             <TextContent authorIsMe={authorIsMe}>
-              {props.message.content}
+              {message.content}
             </TextContent>
           )
         }
         {
-          props.message.reactions
+          message.reactions
           && (
             <ReactionPanel>
-              {props.message.reactions.map((e) => e.reaction).join(' ')}
+              {message.reactions.map((e) => e.reaction).join(' ')}
             </ReactionPanel>
           )
         }

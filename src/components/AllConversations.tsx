@@ -1,34 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ConversationSummary from '../models/ConversationSummary';
-import ConversationDetails from './ConversationDetails';
+import BestMoments from './BestMoments';
 import ConversationList from './ConversationList';
 
 interface Props{
   summaries : ConversationSummary[]
 }
-const RightP = styled.p`
-  display: inline-block;
-  width: 70%;
-  height: 100vh;
-  overflow-y: scroll;
-`;
 const MainPanel = styled.div`
   display: flex;
 `;
 
 const AllConversations : React.FC<Props> = (props : Props) => {
   const [currentConversation, setCurrentConversation] = useState<ConversationSummary>(undefined);
+  // useEffect(() => {
+  //   if (props.summaries) {
+  //     setCurrentConversation(props.summaries[0]);
+  //   }
+  // }, []);
   return (
     <MainPanel>
-      <ConversationList
-        conversationSummaries={props.summaries}
-        onConversationSelected={(c) => setCurrentConversation(c)}
-      />
       {
         currentConversation
-          ? <ConversationDetails conversation={currentConversation} />
-          : <RightP>Choisis une conversation à analyser.</RightP>
+          ? <BestMoments onStoriesEnd={() => setCurrentConversation(undefined)} conversation={currentConversation} />
+          : (
+            <ConversationList
+              conversationSummaries={props.summaries}
+              onConversationSelected={(c) => setCurrentConversation(c)}
+            />
+          )
       }
     </MainPanel>
   );

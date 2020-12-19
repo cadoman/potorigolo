@@ -8,11 +8,9 @@ interface Props{
 }
 
 const StyledOl = styled.ol`
-  width : 30%;
   padding: 0;
-  max-height: 100vh;
-  overflow-y: scroll;
-  margin: 0;
+  margin: 30px auto;
+  box-shadow: 3px -2px 5px 3px #ccc;
 `;
 
 const StyledConvButton = styled.button`
@@ -22,11 +20,12 @@ const StyledConvButton = styled.button`
   border: none;
   font-size: 1.5em;
   width: 100%;
-  padding-left: 5px;
+  padding: 0px 30px;
   text-align: left;
+  transition : background-color .2s;
   :hover{
     cursor: pointer;
-    background-color: gray;
+    background-color: #DDDDDD;
   }
 `;
 
